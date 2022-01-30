@@ -1,0 +1,33 @@
+{
+  "name": "book-directory-backend",
+  "version": "1.0.0",
+  "description": "in progress...",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ainozerie/book-directory-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ainozerie/book-directory-backend/issues"
+  },
+  "homepage": "https://github.com/ainozerie/book-directory-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "./data/storage.json"
+    ]
+  }
+}
