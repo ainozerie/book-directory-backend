@@ -71,5 +71,9 @@ router.delete('/', (req, res) => {
         });
     });
 });
+router.get('/*', (req, res) => {
+    res.send('Error endpoint');
+    res.end;
+});
 
 module.exports = router;
