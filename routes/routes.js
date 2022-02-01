@@ -39,6 +39,7 @@ router.get('/:search', (req, res) => {
 router.post('/', (req, res) => {
     fs.readFile(storagePath, (err, content) => {
         if (err) console.log(err);
+        console.log(req.body);
         storageData = JSON.parse(content);
         const bookId = Math.floor(100000 + Math.random() * 900000);
         storageData[bookId] = req.body;
@@ -56,20 +57,18 @@ router.put('/', (req, res) => {
         storageData[req.body.bookId] = {'name': req.body.name, 'author': req.body.author};
         fs.writeFile(storagePath, JSON.stringify(storageData), (err) => {
             if (err) console.log(err);
-            res.send('successfilly updated');
+            res.send('successfully updated');
             res.end;
         });
     });
 });
-router.delete('/', (req, res) => {
+router.delete('/:bookId', (req, res) => {
     fs.readFile(storagePath, (err, content) => {
         if (err) console.log(err);
         storageData = JSON.parse(content);
-        storageData.push(req.body);
-        const newStorageData = storageData.filter(item => {
-            if (!item.name.toLowerCase().includes(req.body.name) && !item.author.toLowerCase().includes(req.body.author)) return item;
-        });
-        fs.writeFile(storagePath, JSON.stringify(newStorageData), (err) => {
+        console.log(req.body);
+        delete storageData[req.params.bookId];
+        fs.writeFile(storagePath, JSON.stringify(storageData), (err) => {
             if (err) console.log(err);
             res.send('successfully deleted');
             res.end;
