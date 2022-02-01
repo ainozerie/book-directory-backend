@@ -4,14 +4,14 @@ const path = require('path');
 
 const router = express.Router();
 
-let storageData = [];
+let storageData;
 
 const storagePath = path.join(path.resolve('./'), 'data/storage.json');
 
-router.get('/', (req, res) => {
-    res.send('Main page');
-    res.end;
-});
+// router.get('/', (req, res) => {
+//     res.send('Main page');
+//     res.end;
+// });
 router.get('/all', (req, res) => {
     fs.readFile(storagePath, (err, content) => {
         if (err) console.log(err);
@@ -20,23 +20,28 @@ router.get('/all', (req, res) => {
     res.end;
     });
 });
-router.get('/custom', (req, res) => {
+router.get('/:search', (req, res) => {
     fs.readFile(storagePath, (err, content) => {
+        console.log(req.params.search)
         if (err) console.log(err);
+        requestId = req.params.search.toString();
         storageData = JSON.parse(content);
-        const filteredData = storageData.filter(item => {
-            if (item.name.toLowerCase().includes(req.body.search)) return item;
-            if (item.author.toLowerCase().includes(req.body.search)) return item;
-        });
-        res.send(filteredData);
-        res.end;
+        console.log(storageData[requestId])
+        if (storageData[requestId] !== undefined) {
+            res.send(storageData[requestId]);
+            res.end;
+        } else {
+            res.send('not found');
+            res.end;
+        }
     });
 });
 router.post('/', (req, res) => {
     fs.readFile(storagePath, (err, content) => {
         if (err) console.log(err);
         storageData = JSON.parse(content);
-        storageData.push(req.body);
+        const bookId = Math.floor(100000 + Math.random() * 900000);
+        storageData[bookId] = req.body;
         fs.writeFile(storagePath, JSON.stringify(storageData), (err) => {
             if (err) console.log(err);
             res.send('successfully added');
@@ -48,7 +53,7 @@ router.put('/', (req, res) => {
     fs.readFile(storagePath, (err, content) => {
         if (err) console.log(err);
         storageData = JSON.parse(content);
-        storageData.push(req.body);
+        storageData[req.body.bookId] = {'name': req.body.name, 'author': req.body.author};
         fs.writeFile(storagePath, JSON.stringify(storageData), (err) => {
             if (err) console.log(err);
             res.send('successfilly updated');
@@ -71,9 +76,6 @@ router.delete('/', (req, res) => {
         });
     });
 });
-router.get('/*', (req, res) => {
-    res.send('Error endpoint');
-    res.end;
-});
+
 
 module.exports = router;
